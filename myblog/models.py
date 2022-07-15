@@ -26,8 +26,17 @@ class BlogPost(models.Model):
         return self.title
 
 
-# def post_save_receiver(sender, instance, created, **kwargs):
-#     pass
-#
-#
-# post_save.connect(post_save_receiver, sender=settings.AUTH_USER_MODEL)
+class Comment(models.Model):
+    blogpost = models.ForeignKey(BlogPost, on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=20)
+    email = models.EmailField()
+    body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['-created_on']
+
+    def __str__(self):
+        return 'Comment {} by {}'.format(self.body, self.name)
+
